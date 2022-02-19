@@ -17,7 +17,9 @@ class RatingPage extends Component {
 
         this.state = {
             raterDateTime: undefined,
-            userid: this.props.location.state.userid,
+            movieLst: [],
+            // userid: this.props.location.state.userid,
+            userid: 1,
             pageid: 4,
             stepsEnabled: true,
             initialStep: 0,
@@ -50,46 +52,53 @@ class RatingPage extends Component {
     }
 
     updateSurveyResponse() {
-        let raterDateTime = this.state.raterDateTime;
-        let raterEndTime = new Date();
-        let pageid = this.state.pageid;
-        let userid = this.state.userid;
-        let ratedLst = this.state.ratedLst;
+        // let raterDateTime = this.state.raterDateTime;
+        // let raterEndTime = new Date();
+        // let pageid = this.state.pageid;
+        // let userid = this.state.userid;
+        // let ratedLst = this.state.ratedLst;
 
-        axios.put(API + 'add_survey_response', {
-            pageid: pageid,
-            userid: userid,
-            starttime: raterDateTime.toUTCString(),
-            endtime: raterEndTime.toUTCString(),
-            response: { ratings: ratedLst }
-        })
-            .then(response => {
-                if (response.status === 200) {
-                    this.setState({
-                        updateSuccess: true
-                    });
-                    this.props.progressUpdater(10);
-                }
-            })
+        // axios.put(API + 'add_survey_response', {
+        //     pageid: pageid,
+        //     userid: userid,
+        //     starttime: raterDateTime.toUTCString(),
+        //     endtime: raterEndTime.toUTCString(),
+        //     response: { ratings: ratedLst }
+        // })
+        //     .then(response => {
+        //         if (response.status === 200) {
+        //             this.setState({
+        //                 updateSuccess: true
+        //             });
+        //             this.props.progressUpdater(10);
+        //         }
+        //     })
+        this.setState({
+            updateSuccess: true
+        });
+
     }
 
-    rateMovies(ratedLst, isNew) {
+    rateMovies(ratedLst, movieLst, isNew) {
         this.setState({
             count: isNew ? this.state.count + 1 : this.state.count,
-            ratedLst: ratedLst
+            ratedLst: ratedLst,
+            movieLst: movieLst
         });
     }
 
     render() {
         let userid = this.state.userid;
         let ratings = this.state.ratedLst;
+        let movies = this.state.movieLst;
         if (this.state.updateSuccess) {
             return (
                 <Redirect to={{
-                    pathname: "/raterecommendations1",
+                    pathname: "/commpref",
                     state: {
                         userid: userid,
-                        ratings: ratings
+                        ratings: ratings,
+                        movies: movies
                     }
                 }} />
             );
@@ -127,17 +136,17 @@ class RatingPage extends Component {
                 <Container>
                     <MovieGrid handler={this.rateMoviesHandler} />
                 </Container>
-                <div className="jumbotron jumbotron-footer" style={{display: "flex"}}>
+                <div className="jumbotron jumbotron-footer" style={{ display: "flex" }}>
                     <div className="rankHolder">
                         <span> Ranked Movies: </span>
                         <span><i>{this.state.count}</i></span>
                         <span><i>of {this.moviesRatingCount}</i></span>
                     </div>
-                        <Button variant="primary" size="lg" style={{height: "fit-content", marginTop: "1em"}} 
-                            className="next-button footer-btn" disabled={disabled}
-                            onClick={this.updateSurvey}>
-                            Next
-                        </Button>
+                    <Button variant="primary" size="lg" style={{ height: "fit-content", marginTop: "1em" }}
+                        className="next-button footer-btn" disabled={disabled}
+                        onClick={this.updateSurvey}>
+                        Next
+                    </Button>
                 </div>
             </>
         );

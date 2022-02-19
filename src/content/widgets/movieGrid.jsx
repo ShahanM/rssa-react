@@ -28,7 +28,7 @@ class MovieGrid extends Component {
 		let movies_ = this.state.movies;
 		// We prefetch the next page; every query is two pages of items
 		axios
-			.get(API+'movies', { params: { limit: this.itemsPerPage * 2, page: curr + 1 } })
+			.get(API + 'movies', { params: { limit: this.itemsPerPage * 2, page: curr + 1 } })
 			.then(response => {
 				this.setState({
 					movies: movies_.concat(response.data)
@@ -84,14 +84,24 @@ class MovieGrid extends Component {
 			movies: ratedItm,
 			visited: vstdLst
 		});
-		this.props.handler(vstdLst, isNew);
+		console.log('-----------------');
+		console.log(movieLst);
+		console.log(vstdLst);
+		let filteredLst = ratedItm.filter(movie =>
+			vstdLst.map(ratedItm => ratedItm.item_id).indexOf(movie.movie_id) > -1
+		);
+
+		console.log(filteredLst);
+		console.log('-----------------');
+
+		this.props.handler(vstdLst, filteredLst, isNew);
 	}
 
 	render() {
 		if (this.state.movies.length > 0) {
 			let startIdx = this.state.currentPage * this.itemsPerPage;
 			return (
-				<div className="grid-layout" style={{ width:"fit-content", margin: "0 auto", display: "flex" }}>
+				<div className="grid-layout" style={{ width: "fit-content", margin: "0 auto", display: "flex" }}>
 					<div style={{ paddingTop: "234px", marginRight: "18px" }}>
 						<Button disabled={startIdx === 0} variant="primary" style={{ width: "54px", height: "270px" }} onClick={this.renderPrev}>
 							&lt;
@@ -99,7 +109,7 @@ class MovieGrid extends Component {
 					</div>
 					<div className="grid-container">
 						{this.state.movies.slice(startIdx, startIdx + this.itemsPerPage).map(currentMovie => (
-							<MovieGridItem key={"TN_" + currentMovie.rssa_id} movieItem={currentMovie} ratingCallback={this.changeRating} />							
+							<MovieGridItem key={"TN_" + currentMovie.rssa_id} movieItem={currentMovie} ratingCallback={this.changeRating} />
 						))}
 					</div>
 

@@ -8,6 +8,7 @@ import InstructionPage from './content/pages/instructions';
 import RatingPage from './content/pages/ratemovies';
 import RecommendationPage from './content/pages/raterecs';
 import SurveyPage from './content/pages/survey';
+import CommunityPreference from './content/pages/communitypref';
 import ExitPage from './content/pages/exit';
 import ProgressBarComponent from "./content/widgets/progressBar";
 import { Navbar } from 'react-bootstrap';
@@ -32,7 +33,7 @@ class App extends Component {
 
     updateProgress(stepsize = 5) {
         let prog = this.state.progress + stepsize;
-        
+
         this.setState({
             progress: prog > 100 ? 100 : prog
         });
@@ -55,13 +56,15 @@ class App extends Component {
                         </div>
                         <Router>
                             <Switch>
-                                <Route exact path="/" render={(props) => <WelcomePage {...props}
+                                {/* <Route exact path="/" render={(props) => <WelcomePage {...props}
                                     progressUpdater={this.progressUpdater} dest="/instructions" />} />
                                 <Route path="/instructions" render={(props) => <InstructionPage {...props}
-                                    progressUpdater={this.progressUpdater} dest="/ratemovies" />} />
-                                <Route path="/ratemovies" render={(props) => <RatingPage {...props}
-                                    progressUpdater={this.progressUpdater} dest="/raterecommendation1" />} />
-                                <Route path="/raterecommendations1" render={(props) => <RecommendationPage {...props}
+                                    progressUpdater={this.progressUpdater} dest="/ratemovies" />} /> */}
+                                <Route exact path="/" render={(props) => <RatingPage {...props}
+                                    progressUpdater={this.progressUpdater} dest="/commpref" />} />
+                                <Route exact path="/commpref" render={(props) => <CommunityPreference {...props}
+                                    progressUpdater={this.progressUpdater} dest="/exit" />} />
+                                {/* <Route path="/raterecommendations1" render={(props) => <RecommendationPage {...props}
                                     progressUpdater={this.progressUpdater} toggleLoader={this.loaderToggler}
                                     waitMsg={"Please hang on while we find the recommendations for you."}
                                     pageHeader={"Rating Recommendations: Step 1 of 2"}
@@ -80,7 +83,7 @@ class App extends Component {
                                     headerSubtitle={"Please pick one movie that you would watch right now if you could."}
                                     dest="/survey" pick={true} key={3} />} />
                                 <Route path="/survey" render={(props) => <SurveyPage {...props}
-                                    progressUpdater={this.progressUpdater} dest="/exit" key={3} />} />
+                                    progressUpdater={this.progressUpdater} dest="/exit" key={3} />} /> */}
                                 <Route path="/exit" component={ExitPage} />
                             </Switch>
                         </Router>
