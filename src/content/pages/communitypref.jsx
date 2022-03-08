@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import PreferenceGraph from '../widgets/preferenceGraph';
+import PreferenceGraphD3 from '../widgets/PreferenceGraphD3';
 import PreferenceSidebar from '../widgets/preferenceSideBar';
 
 
@@ -22,7 +23,7 @@ class CommunityPreference extends Component {
 				</div>
 				<Row className="g-0">
 					<Col sm={8}>
-						<PreferenceGraph ratings={ratings} movies={movies}></PreferenceGraph>
+						<PreferenceGraphD3 ratings={ratings} movies={movies}></PreferenceGraphD3>
 					</Col>
 					<Col sm={4}>
 						<PreferenceSidebar></PreferenceSidebar>
