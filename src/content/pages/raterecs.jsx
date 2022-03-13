@@ -50,7 +50,8 @@ class RecommendationPage extends Component {
 
         axios.post(API + 'recommendations', {
             userid: userid,
-            ratings: ratings
+            ratings: ratings,
+            count: 7
         },
             {
                 headers: {
