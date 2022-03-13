@@ -5,6 +5,8 @@ import { Redirect } from "react-router-dom";
 import { API } from "../utils/constants";
 import LoadingAnimation from '../widgets/loadingView';
 import MovieSidePanel from "../widgets/movieSidePanel";
+import EmotionInput from "../widgets/emotionInput";
+import EmotionViz from "../widgets/emotionsViz";
 
 
 class RecommendationPage extends Component {
@@ -77,7 +79,7 @@ class RecommendationPage extends Component {
     }
 
     async startTimer() {
-        await this.wait(10000);
+        // await this.wait(10000);
         this.setState({
             ready: true
         });
@@ -139,8 +141,8 @@ class RecommendationPage extends Component {
         ));
         let isNew = !vstdLst.some(item => item.item_id === movieid);
         if (isNew) {
-            vstdLst.push({ 
-                "item_id": movieid, 
+            vstdLst.push({
+                "item_id": movieid,
                 "rating": newRating,
                 "loc": panel.tag,
                 "level": this.props.level
@@ -175,7 +177,7 @@ class RecommendationPage extends Component {
         let leftItems = this.state.leftPanel.items;
         let leftCondition = this.state.leftPanel.condition;
         let leftbyline = this.state.leftPanel.byline;
-        
+
         if (this.state.updateSuccess) {
             return (
                 <Redirect to={{
@@ -194,7 +196,7 @@ class RecommendationPage extends Component {
         let rightCondition = this.state.rightPanel.condition;
         let rightbyline = this.state.rightPanel.byline;
 
-        let buttonDisabled = ((leftItems.length + rightItems.length) !==
+        let buttonDisabled = ((leftItems.length) !==
             this.state.visited.length) && selectedid === undefined;
 
         let buttonVariant = buttonDisabled ? 'secondary' : 'primary';
@@ -212,12 +214,13 @@ class RecommendationPage extends Component {
                         ratingHandler={this.handleRating} panelTitle={leftCondition} pick={pick}
                         selectionHandler={this.handleSelect} selectedid={selectedid}
                         panelByline={leftbyline} />
-                    {this.state.setIsShown && (this.state.activeMovie != null) ? (
-                        <div className="col-sm-4 gx-sm-4">
+                    <div className="col-sm-4 gx-sm-4">
+                        {/* The Hover Block - Only activates when hovered */}
+                        {this.state.setIsShown && (this.state.activeMovie != null) ? (
                             <Card bg="dark" text="white" style={{
                                 backgroundColor: '#333', borderColor: '#333'
                             }}>
-                                <Card.Body style={{ height: '700px' }}>
+                                <Card.Body style={{ height: '360px' }}>
                                     <Card.Img variant="top" className="d-flex mx-auto d-block img-thumbnail"
                                         src={this.state.activeMovie.poster} alt={"Poster of the movie " +
                                             this.state.activeMovie.title}
@@ -232,13 +235,33 @@ class RecommendationPage extends Component {
                                     </Container>
                                 </Card.Body>
                             </Card>
+                        ) : (<div />)
+                        }
+                        {/* The Hover Block Ends */}
+                        <div style={{marginTop: "9px"}}>
+                            <Card bg="light" text="black" style={{
+                                backgroundColor: '#333', borderColor: '#333'
+                            }}>
+                                <Card.Body style={{ height: '360px' }}>
+                                    <Card.Title style={{ marginTop: "0.5rem" }}>
+                                        {"Explanation"}
+                                    </Card.Title>
+                                    <Container className="overflow-auto" style={{ height: "30%" }}>
+                                        <Card.Text>
+                                            {"Random text ............."}
+                                        </Card.Text>
+                                    </Container>
+                                </Card.Body>
+                            </Card>
                         </div>
-                    ) : (<div className="col-sm-4 gx-sm-4" />)
-                    }
-                    <MovieSidePanel id="rightPanel" movieList={rightItems} hoverHandler={this.handleHover}
-                        ratingHandler={this.handleRating} panelTitle={rightCondition} pick={pick}
-                        selectionHandler={this.handleSelect} selectedid={selectedid}
-                        panelByline={rightbyline} />
+                    </div>
+
+
+
+                    <div className="col-sm-4 gy-sm-0">
+                        <EmotionViz />
+                        <EmotionInput />
+                    </div>
                 </div>
                 <div className="jumbotron jumbotron-footer">
                     <Button className="footer-btn" variant={buttonVariant} size="lg"
