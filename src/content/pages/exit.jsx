@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card } from "react-bootstrap";
+import { Card, Nav } from "react-bootstrap";
 import axios from "axios";
 import { API } from "../utils/constants";
 
@@ -7,29 +7,42 @@ class ExitPage extends Component {
 
 	constructor(props) {
 		super(props);
+		let userid = undefined;
+		let completed = false;
+		if (this.props.location.state !== undefined) {
+			userid = this.props.location.state.userid;
+			completed = this.props.location.state.completed;
+		}
 		this.state = {
-			pageid: 14,
-			userid: this.props.location.state.userid,
-			completed: this.props.location.state.completed,
+			pageid: props.location.state.pageid + 1,
+			userid: userid,
+			starttime: new Date(),
+			completed: completed,
 			code: undefined
 		}
 	}
 
 	componentDidMount() {
-		this.getCompletionCode();
+		if (this.state.completed) {
+			this.getCompletionCode();
+		}
 	}
 
 	getCompletionCode() {
 		let userid = this.state.userid;
 		let completed = this.state.completed;
 		let pageid = this.state.pageid;
+		let starttime = this.state.starttime;
 		let requestTime = new Date();
 
-		axios.post(API + 'completionCode', {
+		axios.post(API + 'redirect', {
 			pageid: pageid,
+			starttime: starttime.toUTCString(),
 			requestime: requestTime.toUTCString(),
 			userid: userid,
-			completed: completed
+			response: {
+				completed: completed
+			}
 		},
 			{
 				headers: {
@@ -39,15 +52,13 @@ class ExitPage extends Component {
 			})
 			.then(response => {
 				if (response.status === 200) {
-					this.setState({
-						code: response.data['user_code']
-					})
+					window.location.href = response.data['redirect_url'];
 				}
 			});
 	}
 
 	render() {
-		let code = this.state.code;
+		let redirect_url = this.state.redirect_url;
 		let completed = this.state.completed;
 
 		return (
@@ -66,20 +77,17 @@ class ExitPage extends Component {
 							{completed ? (
 								<Card.Body>
 									<p>
-										Your Amazon Mechanical Turk code to claim your payment is:
+										You will now be redirected back to Prolific. If you are not redirected
+										automatically in more than 15 seconds click the link below.
 									</p>
 									<div style={{
 										margin: "1em 3em", padding: "1.25em 1.5em 0.25em",
-										backgroundColor: "silver", width: "fit-content"
+										width: "fit-content"
 									}}>
-										<p style={{ fontSize: "larger" }}>
-											<strong>{code}</strong>
-										</p>
+										<Nav.Link className="" href={redirect_url}>
+											Take me back.
+										</Nav.Link>
 									</div>
-									<p>
-										Please save this safely so you can claim your payment. We will endevour to validate
-										the codes as soon as possible.
-									</p>
 								</Card.Body>
 							) : (
 								<Card.Body>
